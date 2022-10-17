@@ -109,7 +109,7 @@ employeesRouter.put('/:employeeId', validateData, (req, res, next) => {
     `UPDATE Employee SET 
     name = '${updateEmployee.name}',
     position = '${updateEmployee.position}',
-    wage = '${updateEmployee.wage}',
+    wage = ${updateEmployee.wage},
     is_current_employee = ${updateEmployee.isCurrentEmployee}
     WHERE id = ${req.employeeId};`,
     function (err) {
