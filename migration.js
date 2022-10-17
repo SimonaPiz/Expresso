@@ -49,3 +49,21 @@ db.run(`CREATE TABLE IF NOT EXISTS Menu (
     return;
   }
 });
+
+// Create table MenuItem in database
+db.run(`CREATE TABLE IF NOT EXISTS MenuItem (
+  id INTEGER PRIMARY KEY NOT NULL,
+  name TEXT NOT NULL,
+  description TEXT,
+  inventory INTEGER NOT NULL,
+  price INTEGER NOT NULL,
+  menu_id INTEGER NOT NULL REFERENCES Menu(id)
+);`, function (err) {
+  if (err) {
+    console.log(err);
+    return;
+  } else {
+    console.log('MenuItem table is correctly created');
+    return;
+  }
+});
