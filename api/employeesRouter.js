@@ -98,3 +98,33 @@ employeesRouter.post('/', validateData, (req, res, next) => {
     }
   );
 });
+
+// PUT - Update employee by employeeId
+employeesRouter.put('/:employeeId', validateData, (req, res, next) => {
+  const updateEmployee = req.body.employee;
+  //console.log(updateEmployee);
+  updateEmployee.isCurrentEmployee = req.query.isCurrentEmployee === 0 ? 0 : 1;
+
+  db.run(
+    `UPDATE Employee SET 
+    name = '${updateEmployee.name}',
+    position = '${updateEmployee.position}',
+    wage = '${updateEmployee.wage}',
+    is_current_employee = ${updateEmployee.isCurrentEmployee}
+    WHERE id = ${req.employeeId};`,
+    function (err) {
+      if (err) {
+        return next(err);
+      }
+      db.get(
+        `SELECT * FROM Employee WHERE id = ${req.employeeId};`,
+        (err, row) => {
+          if (err) {
+            return next(err);
+          }
+          res.status(200).send({employee: row});
+        }
+      );
+    }
+  );
+});
