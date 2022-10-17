@@ -18,3 +18,51 @@ timesheetsRouter.get('/', (req, res, next) => {
     }
   );
 });
+
+// Create function to validate new timesheet before adding to the database
+const validateData = (req, res, next) => {
+  const newData = req.body.timesheet;
+  //console.log(newData);
+
+  if (
+    newData.hours < 0 || !newData.hours ||
+    newData.rate  < 0 || !newData.rate ||
+    newData.date  < 0 || !newData.date     
+  ) {
+    res.sendStatus(400);
+    return;
+  } else {
+    //console.log('Data are valid');
+    next();
+  }
+};
+
+// POST - Create new timesheet
+timesheetsRouter.post('/', validateData, (req, res, next) => {
+  //console.log(req.body.timesheet);
+  const newTimesheet = req.body.timesheet;
+
+  db.run(
+    `INSERT INTO Timesheet (hours, rate, date, employee_id)
+    VALUES (
+      ${newTimesheet.hours},
+      ${newTimesheet.rate},
+      ${newTimesheet.date},
+      ${req.params.employeeId}
+    );`,
+    function (err) {
+      if (err) {
+        return next(err);
+      }
+      db.get(
+        `SELECT * FROM Timesheet WHERE id = ${this.lastID};`,
+        (err, row) => {
+          if (err) {
+            return next(err);
+          }
+          res.status(201).send({timesheet: row});
+        }
+      );
+    }
+  );
+});
