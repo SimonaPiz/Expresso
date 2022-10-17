@@ -6,6 +6,32 @@ const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite'
 
 module.exports = employeesRouter;
 
+// Add param ':employeeId' to set it in all Router
+employeesRouter.param('employeeId', (req, res, next, index) => {
+  const employeeId = Number(index);
+  if (employeeId && employeeId >= 0) {  
+    db.get(
+      `SELECT * FROM Employee WHERE id = ?;`,
+      [employeeId],
+      function (err, row) {
+        if (err) {
+          return next(err);
+        } else if (row) {
+          req.employee = row;
+          req.employeeId = employeeId;
+          next();
+        } else {
+          res.sendStatus(404);
+          return;
+        }
+      }
+    );
+  } else {
+    res.sendStatus(404);
+    return;
+  }
+});
+
 // GET /api/employee
 employeesRouter.get('/', (req, res, next) => {
   db.all(
@@ -17,6 +43,11 @@ employeesRouter.get('/', (req, res, next) => {
       res.status(200).send({employees: rows});
     }
   );
+});
+
+// GET /api/employees/:employeeId
+employeesRouter.get('/:employeeId', (req, res, next) => {
+  res.status(200).send({employee: req.employee});
 });
 
 // Create function to validate new employee before adding to the database
