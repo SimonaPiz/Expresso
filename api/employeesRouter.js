@@ -128,3 +128,26 @@ employeesRouter.put('/:employeeId', validateData, (req, res, next) => {
     }
   );
 });
+
+// DELETE - Delete employee by its id
+employeesRouter.delete('/:employeeId', (req, res, next) => {
+  db.run(
+    `UPDATE Employee SET
+    is_current_employee = 0
+    WHERE id = ${req.employeeId};`,
+    function(err) {
+      if (err) {
+        return next(err);
+      }
+      db.get(
+        `SELECT * FROM Employee WHERE id = ${req.employeeId};`,
+        (err, row) => {
+          if (err) {
+            return next(err);
+          }
+          res.status(200).send({employee: row});
+        }
+      );
+    } 
+  );
+});
