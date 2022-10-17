@@ -151,3 +151,7 @@ employeesRouter.delete('/:employeeId', (req, res, next) => {
     } 
   );
 });
+
+//Import and connect timesheetsRouter for path 'api/employees/:employeeId/timesheets'
+const timesheetsRouter = require('./timesheetsRouter');
+employeesRouter.use('/:employeeId/timesheets', timesheetsRouter);
