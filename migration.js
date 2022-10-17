@@ -35,3 +35,17 @@ db.run(`CREATE TABLE IF NOT EXISTS Timesheet (
     return;
   }
 });
+
+// Create table Menu in database
+db.run(`CREATE TABLE IF NOT EXISTS Menu (
+  id INTEGER PRIMARY KEY NOT NULL,
+  title TEXT NOT NULL
+);`, function (err) {
+  if (err) {
+    console.log(err);
+    return;
+  } else {
+    console.log('Menu table is correctly created');
+    return;
+  }
+});
