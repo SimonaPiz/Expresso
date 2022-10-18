@@ -90,3 +90,29 @@ menusRouter.post('/', validateData, (req, res, next) => {
     }
   );
 });
+
+// PUT - Update menu by menuId
+menusRouter.put('/:menuId', validateData, (req, res, next) => {
+  const updateMenu = req.body.menu;
+  //console.log(updateMenu);
+
+  db.run(
+    `UPDATE Menu SET 
+    title = '${updateMenu.title}'
+    WHERE id = ${req.menuId};`,
+    function (err) {
+      if (err) {
+        return next(err);
+      }
+      db.get(
+        `SELECT * FROM Menu WHERE id = ${req.menuId};`,
+        (err, row) => {
+          if (err) {
+            return next(err);
+          }
+          res.status(200).send({menu: row});
+        }
+      );
+    }
+  );
+});
