@@ -121,3 +121,17 @@ menuItemsRouter.put('/:menuItemId', validateData, (req, res, next) => {
     }
   );
 });
+
+// DELETE - Delete menuItem by its id
+menuItemsRouter.delete('/:menuItemId', (req, res, next) => {
+  db.run(
+    `DELETE FROM MenuItem 
+    WHERE id = ${req.menuItemId};`,
+    function(err) {
+      if (err) {
+        return next(err);
+      }
+      res.sendStatus(204);
+    } 
+  );
+});
