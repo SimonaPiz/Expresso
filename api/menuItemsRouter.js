@@ -6,6 +6,32 @@ const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite'
 
 module.exports = menuItemsRouter;
 
+// Add param ':menuItemId' to set it in all Router
+menuItemsRouter.param('menuItemId', (req, res, next, index) => {
+  const menuItemId = Number(index);
+  if (menuItemId && menuItemId >= 0) {  
+    db.get(
+      `SELECT * FROM MenuItem WHERE id = ?;`,
+      [menuItemId],
+      function (err, row) {
+        if (err) {
+          return next(err);
+        } else if (row) {
+          req.menuItem = row;
+          req.menuItemId = menuItemId;
+          next();
+        } else {
+          res.sendStatus(404);
+          return;
+        }
+      }
+    );
+  } else {
+    res.sendStatus(404);
+    return;
+  }
+});
+
 // GET /api/menus/:menuId/menu-items
 menuItemsRouter.get('/', (req, res, next) => {
   db.all(
@@ -26,7 +52,6 @@ const validateData = (req, res, next) => {
 
   if (
     typeof newData.name !== 'string' || !newData.name ||
-    typeof newData.description !== 'string' ||
     newData.inventory < 0 || !newData.inventory ||
     newData.price < 0 || !newData.price
   ) {
@@ -63,6 +88,34 @@ menuItemsRouter.post('/', validateData, (req, res, next) => {
             return next(err);
           }
           res.status(201).send({menuItem: row});
+        }
+      );
+    }
+  );
+});
+
+// PUT - Update menuItem by menuItemId
+menuItemsRouter.put('/:menuItemId', validateData, (req, res, next) => {
+  const updateMenuItem = req.body.menuItem;
+
+  db.run(
+    `UPDATE MenuItem SET 
+    name ='${updateMenuItem.name}',
+    description = '${updateMenuItem.description}',
+    inventory = ${updateMenuItem.inventory},
+    price = ${updateMenuItem.price}
+    WHERE id = ${req.menuItemId};`,
+    function (err) {
+      if (err) {
+        return next(err);
+      }
+      db.get(
+        `SELECT * FROM MenuItem WHERE id = ${req.menuItemId};`,
+        (err, row) => {
+          if (err) {
+            return next(err);
+          }
+          res.status(200).send({menuItem: row});
         }
       );
     }
