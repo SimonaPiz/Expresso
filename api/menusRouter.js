@@ -138,3 +138,7 @@ menusRouter.delete('/:menuId', (req, res, next) => {
     }
   );
 });
+
+//Import and connect menuItemsRouter for path 'api/menus/:menuId/menu-items'
+const menuItemsRouter = require('./menuItemsRouter');
+menusRouter.use('/:menuId/menu-items', menuItemsRouter);
