@@ -118,3 +118,17 @@ timesheetsRouter.put('/:timesheetId', validateData, (req, res, next) => {
     }
   );
 });
+
+// DELETE - Delete timesheet by its id
+timesheetsRouter.delete('/:timesheetId', (req, res, next) => {
+  db.run(
+    `DELETE FROM Timesheet 
+    WHERE id = ${req.timesheetId};`,
+    function(err) {
+      if (err) {
+        return next(err);
+      }
+      res.sendStatus(204);
+    } 
+  );
+});
