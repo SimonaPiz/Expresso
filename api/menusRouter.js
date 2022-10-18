@@ -116,3 +116,25 @@ menusRouter.put('/:menuId', validateData, (req, res, next) => {
     }
   );
 });
+
+// DELETE - Delete menu by its id
+menusRouter.delete('/:menuId', (req, res, next) => {
+  db.all(
+    `SELECT * FROM  MenuItem
+    WHERE menu_id = ${req.menuId};`,
+    function(err, rows) {
+      if (rows.length === 0) {
+        db.run(
+          `DELETE FROM Menu 
+          WHERE id = ${req.menuId};`,
+          function(err) {            
+            res.sendStatus(204);
+          } 
+        );
+      } else {
+        res.sendStatus(400);
+      }
+
+    }
+  );
+});
