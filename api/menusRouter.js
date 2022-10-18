@@ -6,6 +6,37 @@ const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite'
 
 module.exports = menusRouter;
 
+// Add param ':menuId' to set it in all Router
+menusRouter.param('menuId', (req, res, next, index) => {
+  const menuId = Number(index);
+  if (menuId && menuId >= 0) {  
+    db.get(
+      `SELECT * FROM Menu WHERE id = ?;`,
+      [menuId],
+      function (err, row) {
+        if (err) {
+          return next(err);
+        } else if (row) {
+          req.menu = row;
+          req.menuId = menuId;
+          next();
+        } else {
+          res.sendStatus(404);
+          return;
+        }
+      }
+    );
+  } else {
+    res.sendStatus(404);
+    return;
+  }
+});
+
+// GET /api/menus/:menuId
+menusRouter.get('/:menuId', (req, res, next) => {
+  res.status(200).send({menu: req.menu});
+});
+
 // GET /api/menus
 menusRouter.get('/', (req, res, next) => {
   db.all(
