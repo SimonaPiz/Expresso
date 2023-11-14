@@ -2,7 +2,7 @@
 
 > Build a full back-end CRUD API for Expresso, a local café.
 
-<img src="" width="600px" alt="preview" title="preview"/>
+<img src="https://github.com/SimonaPiz/Expresso/blob/main/PreviewExpresso.png" width="600px" alt="preview" title="preview"/>
 
 ## Table of Contents
 * [Project Overview](#project-overview)
@@ -24,7 +24,7 @@ The Expresso internal tool should allow users to:
 - Create, view, update, and delete employees
 - Create, view, update, and delete employee's timesheets
 
-You can view all of this functionality in action in the video below: [▶](https://s3.amazonaws.com/codecademy-content/programs/build-apis/solution-videos/Expresso480.mov" type="video/mp4)
+You can view all of this functionality in action in the video below: [▶](https://s3.amazonaws.com/codecademy-content/programs/build-apis/solution-videos/Expresso480.mov)
 
 ## Implementation Details
 
@@ -118,7 +118,10 @@ A testing suite has been provided.
 
 ## Screenshots
 
-<img src="" width="600px" alt="preview" title="preview"/>
+<img src="https://github.com/SimonaPiz/Expresso/assets/91121660/7b601c3f-72cc-4f83-8b21-1b53885d7819" width="600px" alt="dinner preview" title="dinner preview"/>
+
+<img src="https://github.com/SimonaPiz/Expresso/assets/91121660/17bce7d6-082b-4be8-93d2-d6dc927f54e7" width="600px" alt="employee preview" title="employee preview"/>
+
 
 ## Setup
 In the root directory of the project run
